@@ -1,0 +1,21 @@
+# .NET
+bin/
+obj/
+*.user
+.vs/
+
+# Node / Angular / React Native
+node_modules/
+dist/
+.angular/
+.expo/
+*.log
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Secrets / env
+.env
+appsettings.Development.json

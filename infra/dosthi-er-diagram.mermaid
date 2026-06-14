@@ -1,0 +1,127 @@
+erDiagram
+    USER ||--o{ ORDER : places
+    USER ||--o{ RESERVATION : makes
+    USER ||--o{ REVIEW : writes
+    USER ||--|| CART : has
+    CATEGORY ||--o{ MENU_ITEM : contains
+    MENU_ITEM ||--o{ ITEM_OPTION : has
+    MENU_ITEM ||--o{ REVIEW : receives
+    MENU_ITEM ||--o{ CART_ITEM : "added as"
+    MENU_ITEM ||--o{ ORDER_ITEM : "ordered as"
+    CART ||--o{ CART_ITEM : holds
+    ORDER ||--o{ ORDER_ITEM : contains
+    ORDER ||--|| PAYMENT : "paid by"
+    RESTAURANT_INFO ||--o{ OPERATING_HOURS : has
+
+    USER {
+        int Id PK
+        string Name
+        string Email
+        string PasswordHash
+        string Role "Customer or Admin"
+        datetime CreatedAt
+    }
+
+    CATEGORY {
+        int Id PK
+        string Name
+        int DisplayOrder
+        bool IsActive
+    }
+
+    MENU_ITEM {
+        int Id PK
+        int CategoryId FK
+        string Name
+        string Description
+        decimal Price
+        string ImageUrl
+        bool IsVeg
+        int SpiceLevel "0 to 3"
+        bool IsAvailable
+    }
+
+    ITEM_OPTION {
+        int Id PK
+        int MenuItemId FK
+        string Name "e.g. Extra cheese, Spicy"
+        decimal ExtraPrice
+    }
+
+    CART {
+        int Id PK
+        int UserId FK
+    }
+
+    CART_ITEM {
+        int Id PK
+        int CartId FK
+        int MenuItemId FK
+        int Quantity
+        string SelectedOptions "json"
+        string Notes
+    }
+
+    ORDER {
+        int Id PK
+        int UserId FK
+        string Status "Placed, Confirmed, Preparing, Ready, Completed, Cancelled"
+        string Type "Pickup or Delivery"
+        decimal Subtotal
+        decimal Tax
+        decimal Total
+        datetime CreatedAt
+    }
+
+    ORDER_ITEM {
+        int Id PK
+        int OrderId FK
+        int MenuItemId FK
+        int Quantity
+        decimal UnitPrice "price captured at order time"
+        string SelectedOptions "json"
+    }
+
+    PAYMENT {
+        int Id PK
+        int OrderId FK
+        string StripePaymentIntentId
+        string Status
+        decimal Amount
+    }
+
+    RESERVATION {
+        int Id PK
+        int UserId FK
+        datetime ReservationDateTime
+        int PartySize
+        string Status "Pending, Confirmed, Cancelled"
+        string Notes
+    }
+
+    REVIEW {
+        int Id PK
+        int UserId FK
+        int MenuItemId FK
+        int Rating "1 to 5"
+        string Comment
+        datetime CreatedAt
+    }
+
+    RESTAURANT_INFO {
+        int Id PK
+        string Name
+        string Address
+        string Phone
+        decimal Lat
+        decimal Lng
+    }
+
+    OPERATING_HOURS {
+        int Id PK
+        int RestaurantInfoId FK
+        int DayOfWeek "0 to 6"
+        time OpenTime
+        time CloseTime
+        string Label "e.g. Lunch Specials, Dosa Night"
+    }
