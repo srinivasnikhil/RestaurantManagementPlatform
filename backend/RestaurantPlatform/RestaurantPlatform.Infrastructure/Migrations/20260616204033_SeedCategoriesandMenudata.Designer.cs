@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RestaurantPlatform.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using RestaurantPlatform.Infrastructure.Data;
 namespace RestaurantPlatform.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260616204033_SeedCategoriesandMenudata")]
+    partial class SeedCategoriesandMenudata
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -895,17 +898,6 @@ namespace RestaurantPlatform.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2026, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "admin@gmail.com",
-                            Name = "Admin",
-                            PasswordHash = "$2a$11$CUx5HnTlYDICDSeOfavhXOU2YXdhc9onAEO1X5Ba.gakC84GJ.it.",
-                            Role = 1
-                        });
                 });
 
             modelBuilder.Entity("RestaurantPlatform.Domain.Entities.Cart", b =>

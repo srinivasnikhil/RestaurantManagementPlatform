@@ -16,6 +16,7 @@ namespace RestaurantPlatform.Domain.Entities
         public bool IsVeg { get; set; }
         public int SpiceLevel { get; set; }   // 0 to 3
         public bool IsAvailable { get; set; } = true;
+        public int DisplayOrder { get; set; }
 
         public ICollection<ItemOption> Options { get; set; } = new List<ItemOption>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
