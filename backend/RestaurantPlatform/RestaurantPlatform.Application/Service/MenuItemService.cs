@@ -11,7 +11,10 @@ namespace RestaurantPlatform.Application.Service
     {
         private readonly IUnitOfWork _uow;
 
-        public MenuItemService(IUnitOfWork uow) => _uow = uow;
+        public MenuItemService(IUnitOfWork uow)
+        {
+            _uow = uow;
+        }
 
         public async Task<IReadOnlyList<MenuItemDTO>> GetAllAsync(int? categoryId, bool? isVeg, string? search)
         {

@@ -10,6 +10,10 @@ namespace RestaurantPlatform.Application.Interfaces
         IGenericRepository<Category> Categories { get; }
         IMenuItemRepository MenuItems { get; }
         IUserRepository Users { get; }
+        ICartRepository Carts { get; }
+        IOrderRepository Orders { get; }
+        IReservationRepository Reservations { get; }
+        IReviewRepository Reviews { get; }
         Task<int> SaveChangesAsync();
     }
 }
