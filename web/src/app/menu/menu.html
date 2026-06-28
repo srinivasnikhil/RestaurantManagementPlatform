@@ -1,0 +1,64 @@
+<section class="menu">
+  <h2>Our Menu</h2>
+
+  <div class="controls">
+    <input
+      type="text"
+      class="search"
+      placeholder="Search dishes..."
+      (input)="onSearch($any($event.target).value)"
+    />
+    <label class="veg-toggle">
+      <input type="checkbox" [checked]="vegOnly()" (change)="toggleVeg()" />
+      Veg only
+    </label>
+  </div>
+
+  <div class="tabs">
+    <button
+      class="tab"
+      [class.active]="selectedCategoryId() === null"
+      (click)="selectCategory(null)"
+    >
+      All
+    </button>
+    @for (cat of categories(); track cat.id) {
+      <button
+        class="tab"
+        [class.active]="selectedCategoryId() === cat.id"
+        (click)="selectCategory(cat.id)"
+      >
+        {{ cat.name }}
+      </button>
+    }
+  </div>
+
+  @if (loading()) {
+    <p class="status">Loading menu...</p>
+  } @else if (error()) {
+    <p class="status error">{{ error() }}</p>
+  } @else {
+    <div class="grid">
+      @for (item of items(); track item.id) {
+        <article class="card">
+          <div class="card-head">
+            <span class="dot" [class.non-veg]="!item.isVeg"></span>
+            <h3>{{ item.name }}</h3>
+          </div>
+          <p class="desc">{{ item.description }}</p>
+          <div class="card-foot">
+            <span class="price">{{ item.price | currency }}</span>
+            @if (item.averageRating > 0) {
+              <span class="rating">★ {{ item.averageRating }}</span>
+            }
+          </div>
+          <button class="add-btn" (click)="addToCart(item)" [disabled]="!item.isAvailable">
+            {{ item.isAvailable ? 'Add to cart' : 'Unavailable' }}
+          </button>
+        </article>
+      } @empty {
+        <p class="status">No items match your filters.</p>
+      }
+    </div>
+  }
+</section>

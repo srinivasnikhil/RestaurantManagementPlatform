@@ -1,0 +1,13 @@
+.detail { max-width: 640px; margin: 0 auto; padding: 1.5rem; }
+.back { color: #666; text-decoration: none; font-size: 0.9rem; }
+.meta { color: #888; margin-bottom: 1.25rem; }
+.cancelled { background: #f8d7da; padding: 0.8rem; border-radius: 8px; color: #842029; }
+.stepper { display: flex; justify-content: space-between; margin: 1.5rem 0 2rem; position: relative; }
+.step { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; flex: 1; }
+.bullet { width: 18px; height: 18px; border-radius: 50%; background: #ddd; border: 2px solid #ddd; }
+.step.done .bullet { background: #2ecc71; border-color: #2ecc71; }
+.step .label { font-size: 0.75rem; color: #999; }
+.step.done .label { color: #1a1a1a; font-weight: 600; }
+.items { border: 1px solid #eee; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
+.row { display: flex; justify-content: space-between; padding: 0.35rem 0; }
+.totals .total { border-top: 1px solid #eee; margin-top: 0.4rem; padding-top: 0.6rem; font-weight: 700; }

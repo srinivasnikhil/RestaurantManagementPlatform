@@ -1,0 +1,39 @@
+<section class="detail">
+  @if (loading()) {
+    <p class="status">Loading...</p>
+  } @else if (order(); as o) {
+    <a routerLink="/orders" class="back">← All orders</a>
+    <h2>Order #{{ o.id }}</h2>
+    <p class="meta">{{ o.createdAt | date: 'medium' }} · {{ o.type }}</p>
+
+    @if (isCancelled()) {
+      <p class="cancelled">This order was cancelled.</p>
+    } @else {
+      <div class="stepper">
+        @for (step of steps(); track step.name) {
+          <div class="step" [class.done]="step.done">
+            <span class="bullet"></span>
+            <span class="label">{{ step.name }}</span>
+          </div>
+        }
+      </div>
+    }
+
+    <div class="items">
+      @for (item of o.items; track item.menuItemId) {
+        <div class="row">
+          <span>{{ item.quantity }} × {{ item.menuItemName }}</span>
+          <span>{{ item.lineTotal | currency }}</span>
+        </div>
+      }
+    </div>
+
+    <div class="totals">
+      <div class="row"><span>Subtotal</span><span>{{ o.subtotal | currency }}</span></div>
+      <div class="row"><span>Tax</span><span>{{ o.tax | currency }}</span></div>
+      <div class="row total"><span>Total</span><span>{{ o.total | currency }}</span></div>
+    </div>
+  } @else {
+    <p class="status">Order not found.</p>
+  }
+</section>

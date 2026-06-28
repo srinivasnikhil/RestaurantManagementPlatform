@@ -1,0 +1,10 @@
+.auth { max-width: 380px; margin: 2.5rem auto; padding: 1.5rem; background: #fff; border: 1px solid #eee; border-radius: 12px; }
+.auth h2 { margin-bottom: 1rem; }
+.auth form { display: flex; flex-direction: column; gap: 0.75rem; }
+.auth label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.9rem; color: #444; }
+.auth input { padding: 0.6rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
+.field-error { color: #c0392b; font-size: 0.8rem; }
+.form-error { color: #c0392b; background: #fdecea; padding: 0.6rem; border-radius: 8px; font-size: 0.9rem; }
+.auth button { margin-top: 0.5rem; padding: 0.7rem; background: #1a1a1a; color: #fff; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; }
+.auth button:disabled { opacity: 0.6; cursor: default; }
+.switch { margin-top: 1rem; font-size: 0.9rem; }

@@ -16,7 +16,6 @@ namespace RestaurantPlatform.Api.Controllers
             _service = service;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] int? categoryId,[FromQuery] bool? isVeg,[FromQuery] string? search)
         {

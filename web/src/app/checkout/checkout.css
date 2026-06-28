@@ -1,0 +1,12 @@
+.checkout { max-width: 700px; margin: 0 auto; padding: 1.5rem; }
+.empty { color: #666; }
+.type { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.type-buttons { display: flex; gap: 0.5rem; }
+.type-buttons button { padding: 0.5rem 1.2rem; border: 1px solid #ddd; background: #fff; border-radius: 8px; cursor: pointer; }
+.type-buttons button.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+.review { border: 1px solid #eee; border-radius: 10px; padding: 1rem; margin-bottom: 1.25rem; }
+.row { display: flex; justify-content: space-between; padding: 0.4rem 0; }
+.total-row { border-top: 1px solid #eee; margin-top: 0.4rem; padding-top: 0.7rem; font-weight: 700; }
+.form-error { color: #c0392b; background: #fdecea; padding: 0.6rem; border-radius: 8px; }
+.place { width: 100%; padding: 0.85rem; background: #e67e22; color: #fff; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; }
+.place:disabled { opacity: 0.6; cursor: default; }
