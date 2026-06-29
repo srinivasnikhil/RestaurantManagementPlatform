@@ -19,3 +19,4 @@ __pycache__/
 # Secrets / env
 .env
 appsettings.Development.json
+AI Keys and Endpoints.txt
