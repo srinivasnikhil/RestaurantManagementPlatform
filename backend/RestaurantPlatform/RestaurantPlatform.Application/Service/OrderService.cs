@@ -99,6 +99,7 @@ namespace RestaurantPlatform.Application.Service
             Tax = o.Tax,
             Total = o.Total,
             CreatedAt = o.CreatedAt,
+            CustomerName = o.User?.Name ?? string.Empty,
             Items = o.Items.Select(i => new OrderItemDto
             {
                 MenuItemId = i.MenuItemId,

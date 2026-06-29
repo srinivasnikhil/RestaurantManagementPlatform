@@ -14,7 +14,7 @@ namespace RestaurantPlatform.Infrastructure.Repositories
 
         public async Task<IReadOnlyList<Order>> GetAllWithItemsAsync()
         {
-            return await _context.Orders
+            return await _context.Orders.Include(o => o.User)
             .Include(o => o.Items).ThenInclude(i => i.MenuItem)
             .OrderByDescending(o => o.CreatedAt)
             .ToListAsync();
@@ -22,7 +22,7 @@ namespace RestaurantPlatform.Infrastructure.Repositories
 
         public async Task<Order?> GetByIdWithItemsAsync(int orderId)
         {
-            return await _context.Orders
+            return await _context.Orders.Include(o => o.User)
             .Include(o => o.Items).ThenInclude(i => i.MenuItem)
             .FirstOrDefaultAsync(o => o.Id == orderId);
         }
