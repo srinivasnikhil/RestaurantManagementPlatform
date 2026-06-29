@@ -53,5 +53,35 @@ export interface Order {
   tax: number;
   total: number;
   createdAt: string;
+  customerName?: string;
   items: OrderItem[];
+}
+
+export interface DailyRevenue {
+  date: string;
+  revenue: number;
+}
+
+export interface TopItem {
+  name: string;
+  quantitySold: number;
+  revenue: number;
+}
+
+export interface StatusCount {
+  status: string;
+  count: number;
+}
+
+export interface Dashboard {
+  revenueToday: number;
+  revenueThisWeek: number;
+  revenueThisMonth: number;
+  revenueAllTime: number;
+  ordersToday: number;
+  ordersAllTime: number;
+  averageOrderValue: number;
+  revenueTrend: DailyRevenue[];
+  topItems: TopItem[];
+  statusBreakdown: StatusCount[];
 }

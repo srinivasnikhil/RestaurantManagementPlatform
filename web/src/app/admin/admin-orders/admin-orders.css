@@ -1,0 +1,31 @@
+.page-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.25rem; }
+.page-head h1 { font-size: 1.6rem; margin: 0; }
+.sub { color: #6b7280; margin: 0.2rem 0 0; font-size: 0.9rem; }
+.refresh { background: #fff; border: 1px solid #d8dbe0; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
+.refresh:hover { border-color: #aab2bd; }
+.filters { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.chip { padding: 0.4rem 0.85rem; border: 1px solid #d8dbe0; background: #fff; border-radius: 999px; cursor: pointer; font-size: 0.85rem; color: #444; }
+.chip.active { background: #15191f; color: #fff; border-color: #15191f; }
+.status { color: #6b7280; }
+.order-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.order {
+  display: flex; justify-content: space-between; gap: 1rem;
+  background: #fff; border: 1px solid #e6e8eb; border-radius: 12px;
+  padding: 1rem 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.order-top { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+.order-id { font-weight: 700; font-size: 1.05rem; }
+.type { color: #6b7280; font-size: 0.85rem; }
+.order-items { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; color: #374151; font-size: 0.9rem; margin-bottom: 0.4rem; }
+.order-meta { color: #9095a0; font-size: 0.82rem; display: flex; gap: 0.6rem; }
+.cust { font-weight: 600; color: #6b7280; }
+.order-side { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; gap: 0.6rem; flex: none; }
+.total { font-weight: 700; font-size: 1.15rem; }
+.status-select { padding: 0.45rem 0.6rem; border: 1px solid #d8dbe0; border-radius: 8px; background: #fff; cursor: pointer; font-size: 0.85rem; }
+.badge { font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 999px; background: #eee; font-weight: 600; }
+.badge[data-status="Placed"] { background: #fff3cd; color: #7a5d00; }
+.badge[data-status="Confirmed"] { background: #cfe2ff; color: #084298; }
+.badge[data-status="Preparing"] { background: #ffe5d0; color: #8a4b14; }
+.badge[data-status="Ready"] { background: #d1e7dd; color: #0f5132; }
+.badge[data-status="Completed"] { background: #d4edda; color: #155724; }
+.badge[data-status="Cancelled"] { background: #f8d7da; color: #842029; }

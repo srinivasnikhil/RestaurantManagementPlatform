@@ -1,0 +1,54 @@
+<header class="kds-head">
+  <h1>Kitchen Display</h1>
+  <div class="head-right">
+    @if (lastUpdated()) {
+      <span class="updated">Updated {{ lastUpdated() | date: 'h:mm:ss a' }}</span>
+    }
+    <span class="live">● Live</span>
+  </div>
+</header>
+
+@if (loading()) {
+  <p class="status">Loading tickets...</p>
+} @else {
+  <div class="board">
+    @for (col of columns; track col.key) {
+      <div class="column">
+        <div class="col-head">
+          <span>{{ col.label }}</span>
+          <span class="count">{{ grouped()[col.key].length }}</span>
+        </div>
+
+        <div class="tickets">
+          @for (order of grouped()[col.key]; track order.id) {
+            <article class="ticket" [class.urgent]="minutesAgo(order.createdAt) >= 15">
+              <div class="ticket-head">
+                <span class="num">#{{ order.id }}</span>
+                <span class="age">{{ minutesAgo(order.createdAt) }}m</span>
+              </div>
+              <span class="ticket-type">{{ order.type }}</span>
+
+              <ul class="lines">
+                @for (item of order.items; track item.menuItemId) {
+                  <li>
+                    <span class="qty">{{ item.quantity }}×</span>
+                    {{ item.menuItemName }}
+                  </li>
+                }
+              </ul>
+
+              <div class="ticket-actions">
+                <button class="advance" (click)="advance(order, col.next)">
+                  {{ col.key === 'Ready' ? 'Complete' : 'Bump →' }}
+                </button>
+                <button class="cancel" (click)="cancel(order)">✕</button>
+              </div>
+            </article>
+          } @empty {
+            <p class="empty-col">No orders</p>
+          }
+        </div>
+      </div>
+    }
+  </div>
+}

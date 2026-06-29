@@ -7,9 +7,12 @@
     } @else {
       <div class="type">
         <span>Order type</span>
-        <div class="type-buttons">
-          <button [class.active]="orderType() === 'Pickup'" (click)="setType('Pickup')">Pickup</button>
-          <button [class.active]="orderType() === 'Delivery'" (click)="setType('Delivery')">Delivery</button>
+          <div class="type-buttons">
+            @for (t of orderTypes; track t.value) {
+              <button [class.active]="orderType() === t.value" (click)="setType(t.value)">
+                {{ t.label }}
+              </button>
+          }
         </div>
       </div>
 

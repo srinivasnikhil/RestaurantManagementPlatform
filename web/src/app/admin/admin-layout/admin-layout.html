@@ -1,0 +1,24 @@
+<div class="admin">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">D</span>
+      <span class="brand-text">Dosthi Admin</span>
+    </div>
+
+    <nav class="nav">
+      <a routerLink="/admin/dashboard" routerLinkActive="active">Financial Dashboard</a>
+      <a routerLink="/admin/orders" routerLinkActive="active">Orders</a>
+      <a routerLink="/admin/kitchen" routerLinkActive="active">Kitchen</a>
+      <a routerLink="/admin/menu" routerLinkActive="active">Menu</a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <a routerLink="/" class="back-site">← Back to site</a>
+      <span class="who">{{ auth.currentUser()?.name }}</span>
+    </div>
+  </aside>
+
+  <main class="content">
+    <router-outlet />
+  </main>
+</div>

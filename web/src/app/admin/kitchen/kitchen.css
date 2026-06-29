@@ -1,0 +1,52 @@
+:host { display: block; }
+.kds-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+.kds-head h1 { font-size: 1.6rem; margin: 0; }
+.head-right { display: flex; align-items: center; gap: 1rem; }
+.updated { color: #8a909a; font-size: 0.85rem; }
+.live { color: #2ecc71; font-size: 0.85rem; font-weight: 600; }
+.status { color: #6b7280; }
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.column { background: #1b2027; border-radius: 12px; padding: 0.75rem; min-height: 200px; }
+.col-head {
+  display: flex; justify-content: space-between; align-items: center;
+  color: #cbd2dc; font-weight: 700; padding: 0.4rem 0.5rem 0.75rem; font-size: 0.95rem;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.count { background: #2c3440; color: #cbd2dc; border-radius: 999px; padding: 0.05rem 0.55rem; font-size: 0.8rem; }
+.tickets { display: flex; flex-direction: column; gap: 0.7rem; }
+.empty-col { color: #5b6472; text-align: center; font-size: 0.85rem; padding: 1rem 0; }
+
+.ticket {
+  background: #fff; border-radius: 10px; padding: 0.8rem;
+  border-left: 5px solid #e67e22;
+}
+.ticket.urgent { border-left-color: #e74c3c; box-shadow: 0 0 0 2px rgba(231,76,60,0.3); }
+.ticket-head { display: flex; justify-content: space-between; align-items: baseline; }
+.num { font-weight: 800; font-size: 1.1rem; }
+.age { color: #8a909a; font-size: 0.85rem; font-weight: 600; }
+.ticket.urgent .age { color: #e74c3c; }
+.ticket-type { font-size: 0.75rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.4px; }
+.lines { list-style: none; margin: 0.6rem 0; padding: 0; display: flex; flex-direction: column; gap: 0.3rem; }
+.lines li { font-size: 0.95rem; color: #1f2937; }
+.qty { font-weight: 700; color: #e67e22; margin-right: 0.2rem; }
+.ticket-actions { display: flex; gap: 0.5rem; margin-top: 0.6rem; }
+.advance {
+  flex: 1; background: #1a1a1a; color: #fff; border: none;
+  padding: 0.6rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600;
+}
+.advance:hover { background: #000; }
+.cancel {
+  background: #fff; border: 1px solid #e0e0e0; color: #c0392b;
+  width: 40px; border-radius: 8px; cursor: pointer; font-size: 1rem;
+}
+
+@media (max-width: 900px) {
+  .board { grid-template-columns: repeat(2, 1fr); }
+}

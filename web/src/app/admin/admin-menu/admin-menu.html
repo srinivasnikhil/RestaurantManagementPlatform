@@ -1,0 +1,104 @@
+<header class="page-head">
+  <div>
+    <h1>Menu Management</h1>
+    <p class="sub">{{ items().length }} items</p>
+  </div>
+  <button class="primary" (click)="openCreate()">+ Add item</button>
+</header>
+
+@if (loading()) {
+  <p class="status">Loading menu...</p>
+} @else {
+  <div class="table">
+    <div class="thead">
+      <span>Name</span>
+      <span>Category</span>
+      <span>Price</span>
+      <span>Veg</span>
+      <span>Available</span>
+      <span></span>
+    </div>
+    @for (item of items(); track item.id) {
+      <div class="trow" [class.dimmed]="!item.isAvailable">
+        <span class="name">{{ item.name }}</span>
+        <span class="muted">{{ item.categoryName }}</span>
+        <span>{{ item.price | currency }}</span>
+        <span>
+          <span class="dot" [class.non-veg]="!item.isVeg"></span>
+        </span>
+        <span>
+          <button
+            class="toggle"
+            [class.on]="item.isAvailable"
+            (click)="toggleAvailability(item)"
+          >
+            {{ item.isAvailable ? 'On' : 'Off' }}
+          </button>
+        </span>
+        <span class="row-actions">
+          <button class="link" (click)="openEdit(item)">Edit</button>
+          <button class="link danger" (click)="remove(item)">Delete</button>
+        </span>
+      </div>
+    }
+  </div>
+}
+
+<!-- modal -->
+@if (showForm()) {
+  <div class="overlay" (click)="closeForm()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h2>{{ isEditing() ? 'Edit item' : 'Add item' }}</h2>
+
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <label>
+          Name
+          <input type="text" formControlName="name" />
+        </label>
+
+        <label>
+          Category
+          <select formControlName="categoryId">
+            <option [ngValue]="null" disabled>Select a category</option>
+            @for (cat of categories(); track cat.id) {
+              <option [ngValue]="cat.id">{{ cat.name }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          Description
+          <textarea formControlName="description" rows="2"></textarea>
+        </label>
+
+        <div class="two-col">
+          <label>
+            Price
+            <input type="number" step="0.01" formControlName="price" />
+          </label>
+          <label>
+            Spice level (0–3)
+            <input type="number" formControlName="spiceLevel" />
+          </label>
+        </div>
+
+        <label>
+          Image URL (optional)
+          <input type="text" formControlName="imageUrl" />
+        </label>
+
+        <label class="check">
+          <input type="checkbox" formControlName="isVeg" />
+          Vegetarian
+        </label>
+
+        <div class="modal-actions">
+          <button type="button" class="ghost" (click)="closeForm()">Cancel</button>
+          <button type="submit" class="primary" [disabled]="saving()">
+            {{ saving() ? 'Saving...' : 'Save' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

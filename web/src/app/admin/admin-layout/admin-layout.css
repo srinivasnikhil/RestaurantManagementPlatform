@@ -1,0 +1,32 @@
+.admin { display: flex; min-height: 100vh; background: #f4f5f7; }
+.sidebar {
+  width: 240px; flex: none; background: #15191f; color: #9aa4b2;
+  display: flex; flex-direction: column; padding: 1.25rem 0;
+}
+.brand { display: flex; align-items: center; gap: 0.6rem; padding: 0 1.25rem 1.5rem; }
+.brand-mark {
+  width: 32px; height: 32px; border-radius: 8px; background: #e67e22; color: #fff;
+  display: grid; place-items: center; font-weight: 800;
+}
+.brand-text { color: #fff; font-weight: 700; letter-spacing: 0.2px; }
+.nav { display: flex; flex-direction: column; gap: 0.15rem; padding: 0 0.6rem; flex: 1; }
+.nav a {
+  padding: 0.65rem 0.8rem; color: #9aa4b2; text-decoration: none;
+  border-radius: 8px; font-size: 0.95rem; border-left: 3px solid transparent;
+}
+.nav a:hover { background: #1e2530; color: #fff; }
+.nav a.active { background: #1e2530; color: #fff; border-left-color: #e67e22; }
+.sidebar-foot {
+  padding: 1rem 1.25rem 0; display: flex; flex-direction: column; gap: 0.5rem;
+  border-top: 1px solid #232a35; margin-top: 0.5rem;
+}
+.back-site { color: #9aa4b2; text-decoration: none; font-size: 0.85rem; }
+.back-site:hover { color: #fff; }
+.who { color: #6b7280; font-size: 0.8rem; }
+.content { flex: 1; padding: 2rem; overflow-y: auto; }
+
+@media (max-width: 720px) {
+  .admin { flex-direction: column; }
+  .sidebar { width: 100%; }
+  .nav { flex-direction: row; flex-wrap: wrap; }
+}

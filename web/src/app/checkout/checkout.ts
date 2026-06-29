@@ -15,7 +15,15 @@ export class Checkout implements OnInit {
   private orders = inject(OrderService);
   private router = inject(Router);
 
-  orderType = signal<'Pickup' | 'Delivery'>('Pickup');
+  // all four options, label for display, value sent to the API
+  readonly orderTypes: { value: string; label: string }[] = [
+    { value: 'DineIn', label: 'Dine In' },
+    { value: 'TakeAway', label: 'Takeaway' },
+    { value: 'Pickup', label: 'Pickup' },
+    { value: 'Delivery', label: 'Delivery' },
+  ];
+
+  orderType = signal<string>('DineIn');
   placing = signal(false);
   error = signal<string | null>(null);
 
@@ -23,7 +31,7 @@ export class Checkout implements OnInit {
     this.cart.load();
   }
 
-  setType(type: 'Pickup' | 'Delivery'): void {
+  setType(type: string): void {
     this.orderType.set(type);
   }
 

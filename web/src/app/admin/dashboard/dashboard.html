@@ -1,0 +1,91 @@
+<header class="page-head">
+  <h1>Dashboard</h1>
+</header>
+
+@if (loading()) {
+  <p class="status">Loading dashboard...</p>
+} @else if (data(); as d) {
+
+  <!-- summary cards -->
+  <div class="cards">
+    <div class="card">
+      <span class="card-label">Revenue Today</span>
+      <span class="card-value">{{ d.revenueToday | currency }}</span>
+    </div>
+    <div class="card">
+      <span class="card-label">This Week</span>
+      <span class="card-value">{{ d.revenueThisWeek | currency }}</span>
+    </div>
+    <div class="card">
+      <span class="card-label">This Month</span>
+      <span class="card-value">{{ d.revenueThisMonth | currency }}</span>
+    </div>
+    <div class="card highlight">
+      <span class="card-label">All-Time Revenue</span>
+      <span class="card-value">{{ d.revenueAllTime | currency }}</span>
+    </div>
+    <div class="card">
+      <span class="card-label">Orders Today</span>
+      <span class="card-value">{{ d.ordersToday }}</span>
+    </div>
+    <div class="card">
+      <span class="card-label">Total Orders</span>
+      <span class="card-value">{{ d.ordersAllTime }}</span>
+    </div>
+    <div class="card">
+      <span class="card-label">Avg Order Value</span>
+      <span class="card-value">{{ d.averageOrderValue | currency }}</span>
+    </div>
+  </div>
+
+  <!-- revenue trend chart -->
+  <div class="panel">
+    <h2>Revenue, last 30 days</h2>
+    <div class="chart">
+      <ngx-charts-line-chart
+        [results]="trendSeries()"
+        [xAxis]="true"
+        [yAxis]="true"
+        [autoScale]="true"
+        [roundDomains]="true"
+        [scheme]="'cool'"
+      />
+    </div>
+  </div>
+
+  <div class="two-up">
+    <!-- top sellers -->
+    <div class="panel">
+      <h2>Top Sellers</h2>
+      @if (d.topItems.length === 0) {
+        <p class="muted">No sales yet.</p>
+      } @else {
+        <div class="top-list">
+          @for (item of d.topItems; track item.name) {
+            <div class="top-row">
+              <span class="top-name">{{ item.name }}</span>
+              <span class="top-qty">{{ item.quantitySold }} sold</span>
+              <span class="top-rev">{{ item.revenue | currency }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- status breakdown -->
+    <div class="panel">
+      <h2>Orders by Status</h2>
+      <div class="chart small">
+        <ngx-charts-pie-chart
+          [results]="statusSeries()"
+          [labels]="true"
+          [doughnut]="true"
+          [scheme]="'cool'"
+        />
+      </div>
+    </div>
+  </div>
+
+} @else {
+  <p class="status">Could not load dashboard.</p>
+}

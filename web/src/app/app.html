@@ -2,6 +2,9 @@
   <a routerLink="/" class="brand">Dosthi Chowrastha</a>
   <nav>
     @if (auth.isLoggedIn()) {
+      @if (auth.isAdmin()) {
+        <a routerLink="/admin">Admin</a>
+      }
       <a routerLink="/orders">Orders</a>
       <a routerLink="/cart" class="cart-link">
         Cart

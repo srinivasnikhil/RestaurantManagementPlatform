@@ -9,9 +9,8 @@ export class OrderService {
   private http = inject(HttpClient);
   private base = `${API_BASE}/orders`;
 
-  placeOrder(type: 'Pickup' | 'Delivery'): Observable<Order> {
-    const typeValue = type === 'Pickup' ? 0 : 1;
-    return this.http.post<Order>(this.base, { type: typeValue });
+  placeOrder(type: string): Observable<Order> {
+    return this.http.post<Order>(this.base, { type });
   }
 
   getMyOrders(): Observable<Order[]> {
