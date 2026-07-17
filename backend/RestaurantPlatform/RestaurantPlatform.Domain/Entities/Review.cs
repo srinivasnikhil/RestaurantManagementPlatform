@@ -7,8 +7,9 @@ namespace RestaurantPlatform.Domain.Entities
     public class Review
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public User User { get; set; } = null!;
+        public int? UserId { get; set; }
+        public User? User { get; set; } = null!;
+        public string? ReviewerName { get; set; }
         public int MenuItemId { get; set; }
         public MenuItem MenuItem { get; set; } = null!;
         public int Rating { get; set; }   // 1 to 5

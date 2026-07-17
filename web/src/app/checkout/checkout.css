@@ -10,3 +10,7 @@
 .form-error { color: #c0392b; background: #fdecea; padding: 0.6rem; border-radius: 8px; }
 .place { width: 100%; padding: 0.85rem; background: #e67e22; color: #fff; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; }
 .place:disabled { opacity: 0.6; cursor: default; }
+.field { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.9rem; font-size: 0.9rem; color: #444; }
+.field input, .field textarea { padding: 0.6rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; font-family: inherit; }
+.type-buttons label { cursor: pointer; }
+.type-buttons label.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }

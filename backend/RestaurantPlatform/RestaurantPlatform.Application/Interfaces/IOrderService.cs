@@ -7,9 +7,9 @@ namespace RestaurantPlatform.Application.Interfaces
 {
     public interface IOrderService
     {
-        Task<OrderDto?> PlaceOrderAsync(int userId, PlaceOrderDto dto);
-        Task<IReadOnlyList<OrderDto>> GetMyOrdersAsync(int userId);
-        Task<OrderDto?> GetByIdAsync(int orderId, int userId, bool isAdmin);
+        Task<OrderDto> PlaceGuestOrderAsync(PlaceGuestOrderDto dto);
+        Task<OrderDto?> GetByTrackingCodeAsync(string code);
+        Task<OrderDto?> GetByIdAsync(int orderId);
         Task<IReadOnlyList<OrderDto>> GetAllAsync();
         Task<bool> UpdateStatusAsync(int orderId, UpdateOrderStatusDto dto);
     }

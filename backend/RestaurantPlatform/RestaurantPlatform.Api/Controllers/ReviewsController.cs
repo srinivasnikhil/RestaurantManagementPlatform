@@ -29,13 +29,13 @@ namespace RestaurantPlatform.Api.Controllers
         }
 
         // logged-in users can post a review
-        [Authorize]
+        [AllowAnonymous]
         [HttpPost("menu-items/{menuItemId:int}/reviews")]
         public async Task<IActionResult> Add(int menuItemId, CreateReviewDto dto)
         {
             try
             {
-                var review = await _service.AddAsync(UserId, menuItemId, dto);
+                var review = await _service.AddAsync(menuItemId, dto);
                 return review is null ? NotFound("Menu item not found.") : Ok(review);
             }
             catch (InvalidOperationException ex)
@@ -44,11 +44,11 @@ namespace RestaurantPlatform.Api.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin, Employee")]
         [HttpDelete("reviews/{reviewId:int}")]
         public async Task<IActionResult> Delete(int reviewId)
         {
-            return await _service.DeleteAsync(UserId, reviewId, IsAdmin) ? NoContent() : NotFound();
+            return await _service.DeleteAsync(reviewId) ? NoContent() : NotFound();
         }
     }
 }

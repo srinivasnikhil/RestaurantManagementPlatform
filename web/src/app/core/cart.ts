@@ -1,44 +1,69 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, computed, inject, signal } from '@angular/core';
-import { Cart } from './models';
-import { API_BASE } from './api.config';
+import { Injectable, computed, signal, effect } from '@angular/core';
+import { MenuItem } from './models';
+
+export interface LocalCartLine {
+  menuItemId: number;
+  name: string;
+  unitPrice: number;   // display only; the server reprices at checkout
+  quantity: number;
+}
+
+const STORAGE_KEY = 'dosthi_cart';
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
-  private http = inject(HttpClient);
-  private base = `${API_BASE}/cart`;
+  lines = signal<LocalCartLine[]>(this.loadFromStorage());
 
-  cart = signal<Cart | null>(null);
+  itemCount = computed(() => this.lines().reduce((sum, l) => sum + l.quantity, 0));
+  subtotal = computed(() => this.lines().reduce((sum, l) => sum + l.unitPrice * l.quantity, 0));
 
-  // total number of items, for the header badge
-  itemCount = computed(() =>
-    this.cart()?.items.reduce((sum, i) => sum + i.quantity, 0) ?? 0
-  );
-
-  load(): void {
-    this.http.get<Cart>(this.base).subscribe({
-      next: (c) => this.cart.set(c),
-      error: () => this.cart.set(null),
+  constructor() {
+    // whenever the cart changes, save it to the browser
+    effect(() => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.lines()));
     });
   }
 
-  addItem(menuItemId: number, quantity = 1): void {
-    this.http.post<Cart>(`${this.base}/items`, { menuItemId, quantity })
-      .subscribe({ next: (c) => this.cart.set(c) });
+  add(item: MenuItem, quantity = 1): void {
+    this.lines.update((lines) => {
+      const existing = lines.find((l) => l.menuItemId === item.id);
+      if (existing) {
+        return lines.map((l) =>
+          l.menuItemId === item.id ? { ...l, quantity: l.quantity + quantity } : l
+        );
+      }
+      return [...lines, { menuItemId: item.id, name: item.name, unitPrice: item.price, quantity }];
+    });
   }
 
-  updateQuantity(cartItemId: number, quantity: number): void {
-    this.http.put<Cart>(`${this.base}/items/${cartItemId}`, { quantity })
-      .subscribe({ next: (c) => this.cart.set(c) });
+  setQuantity(menuItemId: number, quantity: number): void {
+    if (quantity < 1) {
+      this.remove(menuItemId);
+      return;
+    }
+    this.lines.update((lines) =>
+      lines.map((l) => (l.menuItemId === menuItemId ? { ...l, quantity } : l))
+    );
   }
 
-  removeItem(cartItemId: number): void {
-    this.http.delete(`${this.base}/items/${cartItemId}`)
-      .subscribe({ next: () => this.load() });
+  quantityOf(menuItemId: number): number {
+    return this.lines().find((l) => l.menuItemId === menuItemId)?.quantity ?? 0;
+  }
+
+  remove(menuItemId: number): void {
+    this.lines.update((lines) => lines.filter((l) => l.menuItemId !== menuItemId));
   }
 
   clear(): void {
-    this.http.delete(`${this.base}/clear`)
-      .subscribe({ next: () => this.cart.set(null) });
+    this.lines.set([]);
+  }
+
+  private loadFromStorage(): LocalCartLine[] {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
   }
 }

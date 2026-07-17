@@ -15,3 +15,6 @@ main { background: #fafafa; min-height: 100vh; }
 .link-btn { background: none; border: 1px solid #fff; color: #fff; padding: 0.35rem 0.8rem; border-radius: 6px; cursor: pointer; }
 .cart-link { position: relative; }
 .badge { background: #e67e22; color: #fff; border-radius: 999px; padding: 0 0.45rem; font-size: 0.75rem; margin-left: 0.2rem; }
+@media print {
+  .app-header { display: none !important; }
+}

@@ -1,37 +1,37 @@
 import { Routes } from '@angular/router';
 import { Menu } from './menu/menu';
 import { Login } from './login/login';
-import { Register } from './register/register';
 import { CartPage } from './cart-page/cart-page';
-import { authGuard } from './core/auth-guard';
 import { Checkout } from './checkout/checkout';
-import { Orders } from './orders/orders';
-import { OrderDetail } from './order-detail/order-detail';
+import { Track } from './track/track';
 import { AdminLayout } from './admin/admin-layout/admin-layout';
-import { adminGuard } from './core/admin-guard';
-import { AdminOrders } from './admin/admin-orders/admin-orders';
-import { Kitchen } from './admin/kitchen/kitchen';
-import { AdminMenu } from './admin/admin-menu/admin-menu';
 import { DashboardPage } from './admin/dashboard/dashboard';
+import { AdminOrders } from './admin/admin-orders/admin-orders';
+import { AdminMenu } from './admin/admin-menu/admin-menu';
+import { Kitchen } from './admin/kitchen/kitchen';
+import { adminGuard } from './core/admin-guard';
+import { staffGuard } from './core/staff-guard';
+import { Pos } from './admin/pos/pos';
+import { Receipt } from './receipt/receipt';
 
 export const routes: Routes = [
-    { path: '', component: Menu},
-    { path: 'login', component: Login },
-    { path: 'register', component: Register },
-    { path: 'cart', component: CartPage, canActivate: [authGuard]},
-    { path: 'checkout', component: Checkout, canActivate: [authGuard]},
-    { path: 'orders', component: Orders, canActivate: [authGuard]},
-    { path: 'orders/:id', component: OrderDetail, canActivate: [authGuard]},
-    {
-        path: 'admin',
-        component: AdminLayout,
-        canActivate: [adminGuard],
-        children: [
-            { path: '', redirectTo: 'orders', pathMatch: 'full' },
-            { path: 'dashboard', component: DashboardPage },
-            { path: 'orders', component: AdminOrders },
-            { path: 'kitchen', component: Kitchen },
-            { path: 'menu', component: AdminMenu },
-        ]
-    }
+  { path: '', component: Menu },
+  { path: 'cart', component: CartPage },
+  { path: 'checkout', component: Checkout },
+  { path: 'track/:code', component: Track },
+  { path: 'receipt/:code', component: Receipt },
+  { path: 'login', component: Login },        // staff login
+  {
+    path: 'admin',
+    component: AdminLayout,
+    canActivate: [staffGuard],
+    children: [
+        { path: '', redirectTo: 'orders', pathMatch: 'full' },
+        { path: 'pos', component: Pos },
+        { path: 'orders', component: AdminOrders },
+        { path: 'kitchen', component: Kitchen },
+        { path: 'menu', component: AdminMenu, canActivate: [adminGuard] },       // admin-only
+        { path: 'dashboard', component: DashboardPage, canActivate: [adminGuard] }, // admin-only
+    ],
+  },
 ];

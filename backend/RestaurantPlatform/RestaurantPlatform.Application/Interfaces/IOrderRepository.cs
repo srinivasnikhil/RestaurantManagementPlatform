@@ -10,5 +10,6 @@ namespace RestaurantPlatform.Application.Interfaces
         Task<IReadOnlyList<Order>> GetByUserIdAsync(int userId);
         Task<Order?> GetByIdWithItemsAsync(int orderId);
         Task<IReadOnlyList<Order>> GetAllWithItemsAsync();
+        Task<Order?> GetByTrackingCodeAsync(string code);
     }
 }

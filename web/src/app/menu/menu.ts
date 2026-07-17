@@ -14,7 +14,7 @@ import { CartService } from '../core/cart';
 })
 export class Menu implements OnInit {
   private menuApi = inject(MenuApi);
-  private cart = inject(CartService);
+  protected cart = inject(CartService);
   private auth = inject(Auth);
   private router = inject(Router);
 
@@ -74,12 +74,7 @@ export class Menu implements OnInit {
     this.loadItems();
   }
 
-  addToCart(item: MenuItem): void {
-    // must be logged in to have a cart
-    if (!this.auth.isLoggedIn()) {
-      this.router.navigate(['/login']);
-      return;
-    }
-    this.cart.addItem(item.id, 1);
-  }
+  add(item: MenuItem): void { this.cart.add(item, 1); }
+  inc(item: MenuItem): void { this.cart.setQuantity(item.id, this.cart.quantityOf(item.id) + 1); }
+  dec(item: MenuItem): void { this.cart.setQuantity(item.id, this.cart.quantityOf(item.id) - 1); }
 }

@@ -1,22 +1,15 @@
 <header class="app-header">
   <a routerLink="/" class="brand">Dosthi Chowrastha</a>
   <nav>
-    @if (auth.isLoggedIn()) {
-      @if (auth.isAdmin()) {
-        <a routerLink="/admin">Admin</a>
-      }
-      <a routerLink="/orders">Orders</a>
-      <a routerLink="/cart" class="cart-link">
-        Cart
-        @if (cart.itemCount() > 0) {
-          <span class="badge">{{ cart.itemCount() }}</span>
-        }
-      </a>
-      <span class="hello">Hi, {{ auth.currentUser()?.name }}</span>
-      <button class="link-btn" (click)="logout()">Logout</button>
-    } @else {
-      <a routerLink="/login">Login</a>
+    @if (auth.isAdmin() || auth.currentUser()?.role === 'Employee') {
+      <a routerLink="/admin">Staff</a>
     }
+    <a routerLink="/cart" class="cart-link">
+      Cart
+      @if (cart.itemCount() > 0) {
+        <span class="badge">{{ cart.itemCount() }}</span>
+      }
+    </a>
   </nav>
 </header>
 

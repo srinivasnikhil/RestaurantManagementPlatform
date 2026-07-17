@@ -1,0 +1,54 @@
+<header class="pos-head">
+  <h1>New Order</h1>
+</header>
+
+<div class="pos">
+  <div class="menu-grid">
+    @for (item of items(); track item.id) {
+      <button class="tile" (click)="addItem(item)">
+        <span class="tile-name">{{ item.name }}</span>
+        <span class="tile-price">{{ item.price | currency }}</span>
+      </button>
+    }
+  </div>
+
+  <aside class="ticket">
+    <div class="type-row">
+      <button [class.active]="orderType() === 'DineIn'" (click)="orderType.set('DineIn')">Dine-in</button>
+      <button [class.active]="orderType() === 'Takeaway'" (click)="orderType.set('Takeaway')">Takeaway</button>
+    </div>
+
+    <input class="label-input" [ngModel]="label()" (ngModelChange)="label.set($event)"
+           [placeholder]="orderType() === 'DineIn' ? 'Table number' : 'Customer name'" />
+
+    <div class="ticket-lines">
+      @for (line of lines(); track line.menuItemId) {
+        <div class="tline">
+          <span class="tl-name">{{ line.name }}</span>
+          <div class="tl-qty">
+            <button (click)="changeQty(line.menuItemId, -1)">−</button>
+            <span>{{ line.quantity }}</span>
+            <button (click)="changeQty(line.menuItemId, 1)">+</button>
+          </div>
+          <span class="tl-total">{{ line.price * line.quantity | currency }}</span>
+        </div>
+      } @empty {
+        <p class="ticket-empty">Tap items to build the order.</p>
+      }
+    </div>
+
+    <div class="ticket-foot">
+      <div class="tsub"><span>Subtotal</span><span>{{ subtotal() | currency }}</span></div>
+      @if (message()) { <p class="pos-msg">{{ message() }}</p> }
+      @if (lastOrder(); as last) {
+        <div class="receipt-row">
+          <button class="rcpt" (click)="downloadReceipt()">PDF</button>
+          <button class="rcpt" (click)="openPrintReceipt()">Print</button>
+        </div>
+      }
+      <button class="send" [disabled]="placing() || lines().length === 0" (click)="submit()">
+        {{ placing() ? 'Sending...' : 'Send to kitchen' }}
+      </button>
+    </div>
+  </aside>
+</div>

@@ -5,12 +5,14 @@ using Microsoft.OpenApi;
 using RestaurantPlatform.Application.Interfaces;
 using RestaurantPlatform.Application.Service;
 using RestaurantPlatform.Infrastructure.Data;
+using RestaurantPlatform.Infrastructure.Receipts;
 using RestaurantPlatform.Infrastructure.Repositories;
 using RestaurantPlatform.Infrastructure.Security;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 // Add services to the container.
 
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -56,6 +58,7 @@ builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<IReceiptService, ReceiptPdfService>();
 
 var jwt = builder.Configuration.GetSection("Jwt");
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

@@ -6,15 +6,19 @@
     </div>
 
     <nav class="nav">
-      <a routerLink="/admin/dashboard" routerLinkActive="active">Financial Dashboard</a>
+      <a routerLink="/admin/pos" routerLinkActive="active">New Order</a>
       <a routerLink="/admin/orders" routerLinkActive="active">Orders</a>
       <a routerLink="/admin/kitchen" routerLinkActive="active">Kitchen</a>
-      <a routerLink="/admin/menu" routerLinkActive="active">Menu</a>
+      @if (auth.isAdmin()) {
+        <a routerLink="/admin/menu" routerLinkActive="active">Menu</a>
+        <a routerLink="/admin/dashboard" routerLinkActive="active">Dashboard</a>
+      }
     </nav>
 
     <div class="sidebar-foot">
-      <a routerLink="/" class="back-site">← Back to site</a>
       <span class="who">{{ auth.currentUser()?.name }}</span>
+      <a routerLink="/" class="back-site">← Back to site</a>
+      <button class="logout-btn" (click)="logout()">Log out</button>
     </div>
   </aside>
 

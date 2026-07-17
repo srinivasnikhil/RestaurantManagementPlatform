@@ -1,41 +1,46 @@
 <section class="checkout">
   <h2>Checkout</h2>
 
-  @if (cart.cart(); as c) {
-    @if (c.items.length === 0) {
-      <p class="empty">Your cart is empty. <a routerLink="/">Browse the menu</a></p>
-    } @else {
-      <div class="type">
-        <span>Order type</span>
-          <div class="type-buttons">
-            @for (t of orderTypes; track t.value) {
-              <button [class.active]="orderType() === t.value" (click)="setType(t.value)">
-                {{ t.label }}
-              </button>
-          }
-        </div>
+  @if (cart.lines().length === 0) {
+    <p class="empty">Your cart is empty. <a routerLink="/">Browse the menu</a></p>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="placeOrder()">
+      <div class="type-buttons">
+        <label [class.active]="form.value.type === 'Pickup'">
+          <input type="radio" formControlName="type" value="Pickup" /> Pickup
+        </label>
+        <label [class.active]="form.value.type === 'Delivery'">
+          <input type="radio" formControlName="type" value="Delivery" /> Delivery
+        </label>
       </div>
 
-      <div class="review">
-        @for (item of c.items; track item.id) {
-          <div class="row">
-            <span>{{ item.quantity }} × {{ item.menuItemName }}</span>
-            <span>{{ item.lineTotal | currency }}</span>
-          </div>
-        }
-        <div class="row total-row">
-          <span>Subtotal</span>
-          <span>{{ c.subtotal | currency }}</span>
-        </div>
-      </div>
-
-      @if (error()) {
-        <p class="form-error">{{ error() }}</p>
+      <label class="field">
+        Name
+        <input type="text" formControlName="customerName" />
+      </label>
+      <label class="field">
+        Phone
+        <input type="tel" formControlName="customerPhone" />
+      </label>
+      @if (form.value.type === 'Delivery') {
+        <label class="field">
+          Delivery address
+          <textarea formControlName="customerAddress" rows="2"></textarea>
+        </label>
       }
 
-      <button class="place" [disabled]="placing()" (click)="placeOrder()">
+      <div class="review">
+        @for (line of cart.lines(); track line.menuItemId) {
+          <div class="row"><span>{{ line.quantity }} × {{ line.name }}</span><span>{{ line.unitPrice * line.quantity | currency }}</span></div>
+        }
+        <div class="row total-row"><span>Subtotal</span><span>{{ cart.subtotal() | currency }}</span></div>
+      </div>
+
+      @if (error()) { <p class="form-error">{{ error() }}</p> }
+
+      <button type="submit" class="place" [disabled]="placing()">
         {{ placing() ? 'Placing order...' : 'Place order' }}
       </button>
-    }
+    </form>
   }
 </section>

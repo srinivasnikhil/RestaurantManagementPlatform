@@ -54,6 +54,8 @@ namespace RestaurantPlatform.Infrastructure.Data
             b.Entity<CartItem>().HasOne(ci => ci.MenuItem).WithMany()
                 .HasForeignKey(ci => ci.MenuItemId).OnDelete(DeleteBehavior.Restrict);
 
+            b.Entity<Order>().HasIndex(o => o.TrackingCode);
+
             SeedData(b);
         }
 
@@ -142,6 +144,18 @@ namespace RestaurantPlatform.Infrastructure.Data
                     Email = "admin@gmail.com",
                     PasswordHash = "$2a$11$CUx5HnTlYDICDSeOfavhXOU2YXdhc9onAEO1X5Ba.gakC84GJ.it.",
                     Role = UserRole.Admin,
+                    CreatedAt = new DateTime(2026, 6, 25)
+                }
+            );
+
+            modelBuilder.Entity<User>().HasData(
+                new User
+                {
+                    Id = 6,
+                    Name = "Employee",
+                    Email = "employee@dosthi.com",
+                    PasswordHash = "$2a$11$N0NMPg7x.c2cEfyZGyb72.fWUe3esmtZl0j49DH1UeV9e7CCS0o.C",
+                    Role = UserRole.Employee,
                     CreatedAt = new DateTime(2026, 6, 25)
                 }
             );

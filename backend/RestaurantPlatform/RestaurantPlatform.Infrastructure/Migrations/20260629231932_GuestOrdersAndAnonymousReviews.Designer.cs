@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RestaurantPlatform.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using RestaurantPlatform.Infrastructure.Data;
 namespace RestaurantPlatform.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260629231932_GuestOrdersAndAnonymousReviews")]
+    partial class GuestOrdersAndAnonymousReviews
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -923,15 +926,6 @@ namespace RestaurantPlatform.Infrastructure.Migrations
                             Name = "Admin",
                             PasswordHash = "$2a$11$CUx5HnTlYDICDSeOfavhXOU2YXdhc9onAEO1X5Ba.gakC84GJ.it.",
                             Role = 1
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CreatedAt = new DateTime(2026, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "employee@dosthi.com",
-                            Name = "Employee",
-                            PasswordHash = "$2a$11$N0NMPg7x.c2cEfyZGyb72.fWUe3esmtZl0j49DH1UeV9e7CCS0o.C",
-                            Role = 2
                         });
                 });
 

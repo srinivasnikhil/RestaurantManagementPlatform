@@ -53,7 +53,10 @@ export interface Order {
   tax: number;
   total: number;
   createdAt: string;
+  trackingCode: string;
   customerName?: string;
+  customerPhone?: string;
+  customerAddress?: string;
   items: OrderItem[];
 }
 

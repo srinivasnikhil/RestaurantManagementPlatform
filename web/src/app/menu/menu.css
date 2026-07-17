@@ -54,3 +54,6 @@
 .rating { color: #f39c12; font-size: 0.9rem; }
 .add-btn { width: 100%; margin-top: 0.75rem; padding: 0.55rem; background: #e67e22; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
 .add-btn:disabled { background: #ccc; cursor: default; }
+.stepper { display: flex; align-items: center; justify-content: space-between; margin-top: 0.75rem; background: #fff7f0; border: 1px solid #e67e22; border-radius: 8px; overflow: hidden; }
+.stepper button { width: 40px; height: 38px; border: none; background: #e67e22; color: #fff; font-size: 1.2rem; cursor: pointer; }
+.stepper .qty { font-weight: 700; }

@@ -12,5 +12,7 @@ namespace RestaurantPlatform.Application.DTOs
 
         [StringLength(1000)]
         public string? Comment { get; set; }
+        [Required, StringLength(60, MinimumLength = 2)]
+        public string ReviewerName { get; set; } = string.Empty;
     }
 }

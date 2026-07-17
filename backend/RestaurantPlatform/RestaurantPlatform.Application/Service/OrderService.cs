@@ -19,58 +19,58 @@ namespace RestaurantPlatform.Application.Service
             _uow = uow;
         }
 
-        public async Task<OrderDto?> PlaceOrderAsync(int userId, PlaceOrderDto dto)
+        public async Task<OrderDto> PlaceGuestOrderAsync(PlaceGuestOrderDto dto)
         {
-            // 1. read the cart with its items and live menu prices
-            var cart = await _uow.Carts.GetByUserIdWithItemsAsync(userId);
-            if (cart is null || cart.Items.Count == 0)
-                return null;   // nothing to order
-
-            // 2. build the order, FREEZING each price as we go
             var order = new Order
             {
-                UserId = userId,
+                UserId = null,                       // guest order, no account
+                CustomerName = dto.CustomerName,
+                CustomerPhone = dto.CustomerPhone,
+                CustomerAddress = dto.CustomerAddress,
                 Type = dto.Type,
                 Status = OrderStatus.Placed,
                 CreatedAt = DateTime.UtcNow,
-                Items = cart.Items.Select(ci => new OrderItem
-                {
-                    MenuItemId = ci.MenuItemId,
-                    Quantity = ci.Quantity,
-                    UnitPrice = ci.MenuItem!.Price,   // <-- the freeze: today's price, copied
-                    SelectedOptions = ci.SelectedOptions
-                }).ToList()
+                TrackingCode = Guid.NewGuid().ToString("N"),
+                Items = new List<OrderItem>()
             };
 
-            // 3. compute and freeze the money on the order
+            // the server prices every line from the database; client prices are ignored
+            foreach (var line in dto.Items)
+            {
+                var menuItem = await _uow.MenuItems.GetByIdAsync(line.MenuItemId);
+                if (menuItem is null || !menuItem.IsAvailable)
+                    throw new InvalidOperationException("An item in your cart is no longer available.");
+
+                order.Items.Add(new OrderItem
+                {
+                    MenuItemId = menuItem.Id,
+                    Quantity = line.Quantity,
+                    UnitPrice = menuItem.Price,      // captured and frozen here
+                    SelectedOptions = line.SelectedOptions
+                });
+            }
+
             order.Subtotal = order.Items.Sum(i => i.UnitPrice * i.Quantity);
             order.Tax = Math.Round(order.Subtotal * TaxRate, 2);
             order.Total = order.Subtotal + order.Tax;
 
-            // 4. save order, then empty the cart (the order is now the record)
             await _uow.Orders.AddAsync(order);
-            cart.Items.Clear();
             await _uow.SaveChangesAsync();
 
             var saved = await _uow.Orders.GetByIdWithItemsAsync(order.Id);
             return MapOrder(saved!);
         }
 
-        public async Task<IReadOnlyList<OrderDto>> GetMyOrdersAsync(int userId)
+        public async Task<OrderDto?> GetByTrackingCodeAsync(string code)
         {
-            var orders = await _uow.Orders.GetByUserIdAsync(userId);
-            return orders.Select(MapOrder).ToList();
+            var order = await _uow.Orders.GetByTrackingCodeAsync(code);
+            return order is null ? null : MapOrder(order);
         }
 
-        public async Task<OrderDto?> GetByIdAsync(int orderId, int userId, bool isAdmin)
+        public async Task<OrderDto?> GetByIdAsync(int orderId)
         {
             var order = await _uow.Orders.GetByIdWithItemsAsync(orderId);
-            if (order is null) return null;
-
-            // rule: a customer can only see their own order; an admin can see any
-            if (!isAdmin && order.UserId != userId) return null;
-
-            return MapOrder(order);
+            return order is null ? null : MapOrder(order);
         }
 
         public async Task<IReadOnlyList<OrderDto>> GetAllAsync()
@@ -99,13 +99,16 @@ namespace RestaurantPlatform.Application.Service
             Tax = o.Tax,
             Total = o.Total,
             CreatedAt = o.CreatedAt,
-            CustomerName = o.User?.Name ?? string.Empty,
+            TrackingCode = o.TrackingCode,
+            CustomerName = o.CustomerName,
+            CustomerPhone = o.CustomerPhone,
+            CustomerAddress = o.CustomerAddress,
             Items = o.Items.Select(i => new OrderItemDto
             {
                 MenuItemId = i.MenuItemId,
                 MenuItemName = i.MenuItem?.Name ?? string.Empty,
                 Quantity = i.Quantity,
-                UnitPrice = i.UnitPrice,                 // read the FROZEN price
+                UnitPrice = i.UnitPrice,
                 LineTotal = i.UnitPrice * i.Quantity,
                 SelectedOptions = i.SelectedOptions
             }).ToList()

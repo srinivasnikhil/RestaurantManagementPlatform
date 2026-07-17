@@ -11,3 +11,8 @@
 .items { border: 1px solid #eee; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
 .row { display: flex; justify-content: space-between; padding: 0.35rem 0; }
 .totals .total { border-top: 1px solid #eee; margin-top: 0.4rem; padding-top: 0.6rem; font-weight: 700; }
+.confirm { text-align: center; margin-bottom: 1.5rem; }
+.save-note { color: #6b7280; font-size: 0.9rem; }
+.receipt-actions { display: flex; gap: 0.75rem; justify-content: center; margin: 1rem 0; flex-wrap: wrap; }
+.btn { background: #1a1a1a; color: #fff; padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none; font-size: 0.9rem; }
+.btn.ghost { background: #fff; color: #1a1a1a; border: 1px solid #ddd; }

@@ -1,0 +1,42 @@
+@if (notFound()) {
+  <p class="msg">Receipt not found.</p>
+} @else if (order(); as o) {
+  <div class="receipt-wrap">
+    <!-- this bar is hidden when printing -->
+    <div class="no-print toolbar">
+      <button (click)="print()">Print</button>
+    </div>
+
+    <div class="receipt">
+      <div class="center bold big">Dosthi Chowrastha</div>
+      <div class="center small">Tampa, FL</div>
+      <div class="rule"></div>
+
+      <div class="line"><span>Order</span><span>#{{ o.id }}</span></div>
+      <div class="line"><span>Date</span><span>{{ o.createdAt | date: 'short' }}</span></div>
+      <div class="line"><span>Type</span><span>{{ o.type }}</span></div>
+      @if (o.customerName) {
+        <div class="line"><span>Name</span><span>{{ o.customerName }}</span></div>
+      }
+      <div class="rule"></div>
+
+      @for (item of o.items; track item.menuItemId) {
+        <div class="item">
+          <div class="item-top">
+            <span>{{ item.quantity }} x {{ item.menuItemName }}</span>
+            <span>{{ item.lineTotal | currency }}</span>
+          </div>
+        </div>
+      }
+      <div class="rule"></div>
+
+      <div class="line"><span>Subtotal</span><span>{{ o.subtotal | currency }}</span></div>
+      <div class="line"><span>Tax</span><span>{{ o.tax | currency }}</span></div>
+      <div class="line bold"><span>TOTAL</span><span>{{ o.total | currency }}</span></div>
+      <div class="rule"></div>
+
+      <div class="center small">Thank you!</div>
+      <div class="center tiny">Track: {{ o.trackingCode }}</div>
+    </div>
+  </div>
+}

@@ -30,3 +30,18 @@
   .sidebar { width: 100%; }
   .nav { flex-direction: row; flex-wrap: wrap; }
 }
+
+.logout-btn {
+  background: none;
+  border: 1px solid #3a4250;
+  color: #9aa4b2;
+  padding: 0.45rem 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-align: left;
+}
+.logout-btn:hover {
+  background: #1e2530;
+  color: #fff;
+}

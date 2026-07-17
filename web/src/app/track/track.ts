@@ -5,40 +5,39 @@ import { OrderService } from '../core/order';
 import { Order } from '../core/models';
 
 @Component({
-  selector: 'app-order-detail',
+  selector: 'app-track',
   imports: [CurrencyPipe, DatePipe, RouterLink],
-  templateUrl: './order-detail.html',
-  styleUrl: './order-detail.css',
+  templateUrl: './track.html',
+  styleUrl: './track.css',
 })
-export class OrderDetail implements OnInit {
-  private orderService = inject(OrderService);
+export class Track implements OnInit {
+  protected orders = inject(OrderService);
   private route = inject(ActivatedRoute);
 
   order = signal<Order | null>(null);
   loading = signal(true);
+  notFound = signal(false);
 
-  // the happy-path status flow, for the stepper
   private readonly flow = ['Placed', 'Confirmed', 'Preparing', 'Ready', 'Completed'];
 
   steps = computed(() => {
     const current = this.order()?.status;
-    const currentIndex = current ? this.flow.indexOf(current) : -1;
-    return this.flow.map((name, i) => ({
-      name,
-      done: currentIndex >= 0 && i <= currentIndex,
-    }));
+    const idx = current ? this.flow.indexOf(current) : -1;
+    return this.flow.map((name, i) => ({ name, done: idx >= 0 && i <= idx }));
   });
 
   isCancelled = computed(() => this.order()?.status === 'Cancelled');
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.orderService.getById(id).subscribe({
-      next: (o) => {
-        this.order.set(o);
-        this.loading.set(false);
-      },
-      error: () => this.loading.set(false),
+    const code = this.route.snapshot.paramMap.get('code')!;
+    this.orders.trackByCode(code).subscribe({
+      next: (o) => { this.order.set(o); this.loading.set(false); },
+      error: () => { this.notFound.set(true); this.loading.set(false); },
     });
+  }
+
+  openReceipt(): void {
+    const o = this.order();
+    if (o) window.open(this.orders.receiptUrlByCode(o.trackingCode), '_blank');
   }
 }

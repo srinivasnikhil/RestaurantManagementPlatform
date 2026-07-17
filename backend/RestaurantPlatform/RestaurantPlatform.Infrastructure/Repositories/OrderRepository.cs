@@ -27,6 +27,13 @@ namespace RestaurantPlatform.Infrastructure.Repositories
             .FirstOrDefaultAsync(o => o.Id == orderId);
         }
 
+        public async Task<Order?> GetByTrackingCodeAsync(string code)
+        {
+            return await _context.Orders
+                                .Include(o => o.Items).ThenInclude(i => i.MenuItem)
+                                .FirstOrDefaultAsync(o => o.TrackingCode == code);
+        }
+
         public async Task<IReadOnlyList<Order>> GetByUserIdAsync(int userId)
         {
             return await _context.Orders

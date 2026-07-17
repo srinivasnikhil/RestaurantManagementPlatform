@@ -1,0 +1,33 @@
+.receipt-wrap { max-width: 320px; margin: 1.5rem auto; }
+.toolbar { text-align: center; margin-bottom: 1rem; }
+.toolbar button {
+  padding: 0.6rem 1.5rem; background: #1a1a1a; color: #fff;
+  border: none; border-radius: 8px; cursor: pointer; font-size: 0.95rem;
+}
+
+.receipt {
+  background: #fff;
+  padding: 1rem 1.25rem;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: #000;
+  border: 1px dashed #ccc;
+}
+.center { text-align: center; }
+.bold { font-weight: 700; }
+.big { font-size: 15px; }
+.small { font-size: 11px; }
+.tiny { font-size: 9px; word-break: break-all; }
+.rule { border-top: 1px dashed #000; margin: 8px 0; }
+.line { display: flex; justify-content: space-between; }
+.item-top { display: flex; justify-content: space-between; }
+.msg { text-align: center; margin: 2rem; }
+
+/* print rules: only the receipt shows on paper */
+@media print {
+  .no-print { display: none !important; }
+  .receipt-wrap { max-width: 80mm; margin: 0; }
+  .receipt { border: none; padding: 0; }
+  /* hide the app header when printing this page */
+  :host { position: absolute; top: 0; left: 0; }
+}

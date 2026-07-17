@@ -54,7 +54,7 @@ namespace RestaurantPlatform.Api.Controllers
             return await _service.DeleteAsync(id) ? NoContent() : NotFound();
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPatch("{id:int}/availability")]
         public async Task<IActionResult> SetAvailability(int id, [FromBody] bool isAvailable)
         {

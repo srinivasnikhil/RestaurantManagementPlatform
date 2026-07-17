@@ -4,7 +4,7 @@ using System.Text;
 
 namespace RestaurantPlatform.Domain.Enums
 {
-    public enum UserRole { Customer, Admin }
+    public enum UserRole { Customer, Admin, Employee }
     public enum OrderStatus { Placed, Confirmed, Preparing, Ready, Completed, Cancelled }
     public enum OrderType { Pickup, Delivery, DineIn, Takeaway }
     public enum ReservationStatus { Pending, Confirmed, Cancelled }
