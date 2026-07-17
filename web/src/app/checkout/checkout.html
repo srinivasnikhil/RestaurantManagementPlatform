@@ -4,7 +4,7 @@
   @if (cart.lines().length === 0) {
     <p class="empty">Your cart is empty. <a routerLink="/">Browse the menu</a></p>
   } @else {
-    <form [formGroup]="form" (ngSubmit)="placeOrder()">
+    <form [formGroup]="form">
       <div class="type-buttons">
         <label [class.active]="form.value.type === 'Pickup'">
           <input type="radio" formControlName="type" value="Pickup" /> Pickup
@@ -28,19 +28,20 @@
           <textarea formControlName="customerAddress" rows="2"></textarea>
         </label>
       }
-
-      <div class="review">
-        @for (line of cart.lines(); track line.menuItemId) {
-          <div class="row"><span>{{ line.quantity }} × {{ line.name }}</span><span>{{ line.unitPrice * line.quantity | currency }}</span></div>
-        }
-        <div class="row total-row"><span>Subtotal</span><span>{{ cart.subtotal() | currency }}</span></div>
-      </div>
-
-      @if (error()) { <p class="form-error">{{ error() }}</p> }
-
-      <button type="submit" class="place" [disabled]="placing()">
-        {{ placing() ? 'Placing order...' : 'Place order' }}
-      </button>
     </form>
+
+    <div class="review">
+      @for (line of cart.lines(); track line.menuItemId) {
+        <div class="row"><span>{{ line.quantity }} × {{ line.name }}</span><span>{{ line.unitPrice * line.quantity | currency }}</span></div>
+      }
+      <div class="row total-row"><span>Subtotal</span><span>{{ cart.subtotal() | currency }}</span></div>
+    </div>
+    <p class="tax-note">Tax is added at payment.</p>
+
+    @if (error()) { <p class="form-error">{{ error() }}</p> }
+    @if (message()) { <p class="form-note">{{ message() }}</p> }
+
+    <div class="pay-label">Pay to place your order</div>
+    <div id="paypal-button-container"></div>
   }
 </section>

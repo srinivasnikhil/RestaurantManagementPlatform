@@ -5,6 +5,7 @@ using Microsoft.OpenApi;
 using RestaurantPlatform.Application.Interfaces;
 using RestaurantPlatform.Application.Service;
 using RestaurantPlatform.Infrastructure.Data;
+using RestaurantPlatform.Infrastructure.Payments;
 using RestaurantPlatform.Infrastructure.Receipts;
 using RestaurantPlatform.Infrastructure.Repositories;
 using RestaurantPlatform.Infrastructure.Security;
@@ -59,6 +60,7 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IReceiptService, ReceiptPdfService>();
+builder.Services.AddHttpClient<IPayPalService, PayPalService>();
 
 var jwt = builder.Configuration.GetSection("Jwt");
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

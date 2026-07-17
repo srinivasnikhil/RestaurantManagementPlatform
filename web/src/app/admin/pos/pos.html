@@ -39,16 +39,23 @@
 
     <div class="ticket-foot">
       <div class="tsub"><span>Subtotal</span><span>{{ subtotal() | currency }}</span></div>
-      @if (message()) { <p class="pos-msg">{{ message() }}</p> }
+
+      @if (message()) { <p class="pos-msg">✓ {{ message() }}</p> }
+      @if (error()) { <p class="pos-err">{{ error() }}</p> }
+
       @if (lastOrder(); as last) {
         <div class="receipt-row">
-          <button class="rcpt" (click)="downloadReceipt()">PDF</button>
-          <button class="rcpt" (click)="openPrintReceipt()">Print</button>
+          <button class="rcpt" (click)="downloadReceipt()"><span class="rcpt-icon">⬇</span> PDF Receipt</button>
+          <button class="rcpt" (click)="openPrintReceipt()"><span class="rcpt-icon">🖨</span> Print</button>
         </div>
       }
-      <button class="send" [disabled]="placing() || lines().length === 0" (click)="submit()">
-        {{ placing() ? 'Sending...' : 'Send to kitchen' }}
-      </button>
+
+      @if (lines().length > 0) {
+        <div class="pay-label">Take payment to send order</div>
+        <div id="pos-paypal"></div>
+        } @else {
+          <p class="ticket-hint">Add items, then take payment.</p>
+      }
     </div>
   </aside>
 </div>

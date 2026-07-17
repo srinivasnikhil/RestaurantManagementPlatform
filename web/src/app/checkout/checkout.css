@@ -14,3 +14,6 @@
 .field input, .field textarea { padding: 0.6rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; font-family: inherit; }
 .type-buttons label { cursor: pointer; }
 .type-buttons label.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+.pay-label { text-align: center; color: #444; margin: 1.25rem 0 0.75rem; font-weight: 600; }
+#paypal-button-container { max-width: 100%; }
+.form-note { color: #6b7280; background: #f3f4f6; padding: 0.6rem; border-radius: 8px; margin: 0.5rem 0; }

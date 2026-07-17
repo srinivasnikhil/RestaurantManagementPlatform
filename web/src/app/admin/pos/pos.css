@@ -86,4 +86,8 @@
   opacity: 0.45;
   cursor: default;
 }
+.pos-err { background: rgba(192,57,43,0.15); color: #f1a9a0; border: 1px solid rgba(192,57,43,0.4); padding: 0.55rem 0.7rem; border-radius: 8px; font-size: 0.85rem; margin-bottom: 0.75rem; }
+.pay-label { text-align: center; color: #cbd2dc; font-size: 0.85rem; margin: 0.5rem 0; }
+.ticket-hint { color: #6b7280; font-size: 0.85rem; text-align: center; }
+#pos-paypal { margin-top: 0.5rem; }
 @media (max-width: 800px) { .pos { grid-template-columns: 1fr; } .ticket { position: static; } }

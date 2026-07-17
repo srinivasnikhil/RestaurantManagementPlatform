@@ -19,7 +19,7 @@ namespace RestaurantPlatform.Application.Service
             _uow = uow;
         }
 
-        public async Task<OrderDto> PlaceGuestOrderAsync(PlaceGuestOrderDto dto)
+        public async Task<OrderDto> PlaceGuestOrderAsync(PlaceGuestOrderDto dto, string? paymentReference = null)
         {
             var order = new Order
             {
@@ -53,6 +53,16 @@ namespace RestaurantPlatform.Application.Service
             order.Subtotal = order.Items.Sum(i => i.UnitPrice * i.Quantity);
             order.Tax = Math.Round(order.Subtotal * TaxRate, 2);
             order.Total = order.Subtotal + order.Tax;
+
+            if (paymentReference is not null)
+            {
+                order.Payment = new Payment
+                {
+                    StripePaymentIntentId = paymentReference,  // legacy column name; holds the PayPal capture id
+                    Status = PaymentStatus.Paid,
+                    Amount = order.Total
+                };
+            }
 
             await _uow.Orders.AddAsync(order);
             await _uow.SaveChangesAsync();
@@ -88,6 +98,19 @@ namespace RestaurantPlatform.Application.Service
             _uow.Orders.Update(order);
             await _uow.SaveChangesAsync();
             return true;
+        }
+        public async Task<decimal> QuoteAsync(PlaceGuestOrderDto dto)
+        {
+            decimal subtotal = 0;
+            foreach (var line in dto.Items)
+            {
+                var menuItem = await _uow.MenuItems.GetByIdAsync(line.MenuItemId);
+                if (menuItem is null || !menuItem.IsAvailable)
+                    throw new InvalidOperationException("An item in your cart is no longer available.");
+                subtotal += menuItem.Price * line.Quantity;
+            }
+            var tax = Math.Round(subtotal * TaxRate, 2);
+            return subtotal + tax;
         }
 
         private static OrderDto MapOrder(Order o) => new()

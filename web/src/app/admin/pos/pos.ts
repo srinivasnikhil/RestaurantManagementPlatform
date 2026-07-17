@@ -1,10 +1,15 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, AfterViewChecked } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
 import { MenuApi } from '../../core/menu-api';
 import { OrderService } from '../../core/order';
+import { PaymentService, PaymentOrderRequest } from '../../core/payment';
+import { PAYPAL_CLIENT_ID } from '../../core/api.config';
 import { MenuItem } from '../../core/models';
 import { downloadBlob } from '../../core/download';
+
+declare const paypal: any;
 
 interface PosLine { menuItemId: number; name: string; price: number; quantity: number; }
 
@@ -14,22 +19,48 @@ interface PosLine { menuItemId: number; name: string; price: number; quantity: n
   templateUrl: './pos.html',
   styleUrl: './pos.css',
 })
-export class Pos implements OnInit {
+export class Pos implements OnInit, AfterViewChecked {
   private menuApi = inject(MenuApi);
   private orders = inject(OrderService);
+  private payment = inject(PaymentService);
 
   items = signal<MenuItem[]>([]);
   lines = signal<PosLine[]>([]);
   orderType = signal<'DineIn' | 'Takeaway'>('DineIn');
-  label = signal('');            // table number or customer name
-  placing = signal(false);
+  label = signal('');
   message = signal<string | null>(null);
+  error = signal<string | null>(null);
   lastOrder = signal<{ id: number; code: string } | null>(null);
 
   subtotal = computed(() => this.lines().reduce((s, l) => s + l.price * l.quantity, 0));
 
+  private buttonsRendered = false;
+
   ngOnInit(): void {
     this.menuApi.getMenuItems().subscribe({ next: (d) => this.items.set(d.filter((i) => i.isAvailable)) });
+    this.loadSdk().catch(() => this.error.set('Could not load PayPal.'));
+  }
+
+  // render the buttons once there are items to pay for
+  ngAfterViewChecked(): void {
+    if (!this.buttonsRendered && this.lines().length > 0 && typeof paypal !== 'undefined'
+        && document.getElementById('pos-paypal')) {
+      this.renderButtons();
+    }
+  }
+
+  private loadSdk(): Promise<void> {
+    if (typeof paypal !== 'undefined') return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const existing = document.getElementById('paypal-sdk');
+      if (existing) { existing.addEventListener('load', () => resolve()); return; }
+      const s = document.createElement('script');
+      s.id = 'paypal-sdk';
+      s.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD`;
+      s.onload = () => resolve();
+      s.onerror = () => reject();
+      document.body.appendChild(s);
+    });
   }
 
   addItem(item: MenuItem): void {
@@ -42,41 +73,50 @@ export class Pos implements OnInit {
 
   changeQty(menuItemId: number, delta: number): void {
     this.lines.update((lines) =>
-      lines
-        .map((l) => l.menuItemId === menuItemId ? { ...l, quantity: l.quantity + delta } : l)
-        .filter((l) => l.quantity > 0)
+      lines.map((l) => l.menuItemId === menuItemId ? { ...l, quantity: l.quantity + delta } : l)
+           .filter((l) => l.quantity > 0)
     );
   }
 
-  submit(): void {
-    if (this.lines().length === 0) return;
-    this.placing.set(true);
-    this.message.set(null);
-
-    this.orders.placeStaffOrder({
+  private buildRequest(): PaymentOrderRequest {
+    return {
       type: this.orderType(),
       customerName: this.label().trim() || (this.orderType() === 'DineIn' ? 'Table' : 'Takeaway'),
       customerPhone: 'Staff-POS',
       items: this.lines().map((l) => ({ menuItemId: l.menuItemId, quantity: l.quantity })),
-    }).subscribe({
-      next: (order) => {
-        this.message.set(`Order #${order.id} sent to the kitchen.`);
-        this.lastOrder.set({ id: order.id, code: order.trackingCode });
-        this.lines.set([]);
-        this.label.set('');
-        this.placing.set(false);
+    };
+  }
+
+  private renderButtons(): void {
+    this.buttonsRendered = true;
+    paypal.Buttons({
+      onClick: (_d: any, actions: any) => {
+        if (this.lines().length === 0) return actions.reject();
+        return actions.resolve();
       },
-      error: (err) => { this.message.set(err.error ?? 'Could not place the order.'); this.placing.set(false); },
-    });
+      createOrder: () => {
+        this.error.set(null);
+        return firstValueFrom(this.payment.createStaffOrder(this.buildRequest())).then((r) => r.paypalOrderId);
+      },
+      onApprove: (data: any) => {
+        return firstValueFrom(this.payment.captureStaff(data.orderID, this.buildRequest()))
+          .then((order) => {
+            this.message.set(`Paid. Order #${order.id} sent to the kitchen.`);
+            this.lastOrder.set({ id: order.id, code: order.trackingCode });
+            this.lines.set([]);
+            this.label.set('');
+          })
+          .catch(() => this.error.set('Payment captured but order failed. Check before retrying.'));
+      },
+      onError: () => this.error.set('Payment failed. Please try again.'),
+    }).render('#pos-paypal');
   }
 
   downloadReceipt(): void {
-  const last = this.lastOrder();
-  if (!last) return;
-  this.orders.downloadReceiptById(last.id).subscribe({
-    next: (blob) => downloadBlob(blob, `receipt-order-${last.id}.pdf`),
-  });
-}
+    const last = this.lastOrder();
+    if (!last) return;
+    this.orders.downloadReceiptById(last.id).subscribe({ next: (blob) => downloadBlob(blob, `receipt-order-${last.id}.pdf`) });
+  }
 
   openPrintReceipt(): void {
     const last = this.lastOrder();
