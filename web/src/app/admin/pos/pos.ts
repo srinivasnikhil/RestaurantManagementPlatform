@@ -76,6 +76,10 @@ export class Pos implements OnInit, AfterViewChecked {
       lines.map((l) => l.menuItemId === menuItemId ? { ...l, quantity: l.quantity + delta } : l)
            .filter((l) => l.quantity > 0)
     );
+
+    if (this.lines().length === 0) {
+      this.buttonsRendered = false;
+    }
   }
 
   private buildRequest(): PaymentOrderRequest {
